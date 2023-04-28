@@ -104,7 +104,7 @@ $(document).ready(function () {
   //     console.log("An error has occurred.");
   // }); quark__ancient_tome__{StoredEnchantments__[{id__'minecraft__fire_aspect',lvl__2s}]}.png
 
-  $.getJSON("json/brewing.json", function (data) {
+  $.getJSON("json/tools.json", function (data) {
     tab_items = data.tab_items
     displayTab();
     $('body').on('click', 'div.divider', function () {
