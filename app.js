@@ -35,6 +35,12 @@ function displayTab(id) {
   container.appendChild(divider)
   tabs[id].tab_items.forEach(item => {
     let img = document.createElement("img")
+    img.title = item.name;
+
+    //temporary remove when img check system is improved
+    if (item.nbt != null) {
+      img.title += " NBT: " + item.nbt;
+    }
 
     checkIfImageExists("icons/" + item.name.replace(':', '__') + ".png", (exists) => {
       if (exists) {
