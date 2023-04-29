@@ -1,5 +1,6 @@
 var items = [];
 var tabs = [];
+var tabNames = ['building_blocks', 'decorations', 'redstone', 'transportation', 'misc', 'food', 'tools', 'combat', 'brewing', '10_spawn_eggs', '11_operator'];
 var currentTab = 0;
 
 const container = document.getElementById("container");
@@ -22,8 +23,14 @@ function checkIfImageExists(url, callback) {
   }
 }
 
-function test(id) {
-  console.log(id)
+function downloadObjectAsJson(exportObj, exportName) {
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+  var downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", exportName + ".json");
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
 }
 
 function displayTab(id) {
@@ -36,21 +43,36 @@ function displayTab(id) {
   tabs[id].tab_items.forEach(item => {
     let img = document.createElement("img")
     img.title = item.name;
-
-    //temporary remove when img check system is improved
-    if (item.nbt != null) {
+    if (item.nbt == null) {
+      checkIfImageExists("icons/" + item.name.replace(':', '__') + ".png", (exists) => {
+        if (exists) {
+          img.src = "icons/" + item.name.replace(':', '__') + ".png"
+        } else {
+          checkIfImageExists("icons/" + item.name.replace(':', '__') + "__{Damage__0}.png", (exists) => {
+            if (exists) {
+              img.src = "icons/" + item.name.replace(':', '__') + "__{Damage__0}.png"
+            } else {
+              img.src = "icons/cube-solid.svg"
+            }
+          })
+        }
+      })
+    } else {
       img.title += " NBT: " + item.nbt;
+      checkIfImageExists("icons/" + item.name.replaceAll(':', '__') + "__" + item.nbt.replaceAll(':', '__').replaceAll('\"', "'") + '.png', (exists) => {
+        if (exists) {
+          img.src = "icons/" + item.name.replaceAll(':', '__') + "__" + item.nbt.replaceAll(':', '__').replaceAll('\"', "'") + '.png'
+        } else {
+          checkIfImageExists("icons/" + item.name.replace(':', '__') + ".png", (exists) => {
+            if (exists) {
+              img.src = "icons/" + item.name.replace(':', '__') + ".png"
+            } else {
+              img.src = "icons/cube-solid.svg"
+            }
+          })
+        }
+      })
     }
-
-    checkIfImageExists("icons/" + item.name.replace(':', '__') + ".png", (exists) => {
-      if (exists) {
-        img.src = "icons/" + item.name.replace(':', '__') + ".png"
-      } else if (item.nbt == null) {
-        img.src = "icons/" + item.name.replace(':', '__') + "__{Damage__0}.png"
-      } else {
-        img.src = "icons/" + item.name.replaceAll(':', '__') + "__" + item.nbt.replaceAll(':', '__').replaceAll('\"', "'") + '.png'
-      }
-    });
     let divider = document.createElement("div")
     divider.className = "divider"
     divider.id = index;
@@ -61,71 +83,13 @@ function displayTab(id) {
 }
 
 async function dataCollect() {
-  await $.getJSON("json/building_blocks.json", function (data) {
-    tabs.push(data)
-  }).fail(function () {
-    console.log("An error has occurred.");
-  });
-
-  await $.getJSON("json/decorations.json", function (data) {
-    tabs.push(data)
-  }).fail(function () {
-    console.log("An error has occurred.");
-  });
-
-  await $.getJSON("json/redstone.json", function (data) {
-    tabs.push(data)
-  }).fail(function () {
-    console.log("An error has occurred.");
-  });
-
-  await $.getJSON("json/transportation.json", function (data) {
-    tabs.push(data)
-  }).fail(function () {
-    console.log("An error has occurred.");
-  });
-
-  await $.getJSON("json/misc.json", function (data) {
-    tabs.push(data)
-  }).fail(function () {
-    console.log("An error has occurred.");
-  });
-
-  await $.getJSON("json/food.json", function (data) {
-    tabs.push(data)
-  }).fail(function () {
-    console.log("An error has occurred.");
-  });
-
-  await $.getJSON("json/tools.json", function (data) {
-    tabs.push(data)
-  }).fail(function () {
-    console.log("An error has occurred.");
-  });
-
-  await $.getJSON("json/combat.json", function (data) {
-    tabs.push(data)
-  }).fail(function () {
-    console.log("An error has occurred.");
-  });
-
-  await $.getJSON("json/brewing.json", function (data) {
-    tabs.push(data)
-  }).fail(function () {
-    console.log("An error has occurred.");
-  });
-
-  await $.getJSON("json/10_spawn_eggs.json", function (data) {
-    tabs.push(data)
-  }).fail(function () {
-    console.log("An error has occurred.");
-  });
-
-  await $.getJSON("json/11_operator.json", function (data) {
-    tabs.push(data)
-  }).fail(function () {
-    console.log("An error has occurred.");
-  });
+  for (const tab of tabNames) {
+    await $.getJSON("json/" + tab + ".json", function (data) {
+      tabs.push(data)
+    }).fail(function () {
+      console.log("An error has occurred.");
+    });
+  }
 
   displayTab(currentTab);
 }
@@ -139,7 +103,6 @@ $(document).ready(function () {
   });
 
   $('body').on('click', 'button.tab', function () {
-    //console.log(this.dataset.tab)
     currentTab = Number(this.dataset.tab)
     displayTab(currentTab)
   })

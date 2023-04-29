@@ -37,6 +37,12 @@
       <button class="tab" data-tab="9">Spawn Eggs</button>
       <button class="tab" data-tab="10">Operator</button>
     </div>
+    <button
+      id="download"
+      onclick="downloadObjectAsJson(tabs[currentTab], tabNames[currentTab])"
+    >
+      Download
+    </button>
     <input type="text" id="item-input" />
     <div id="container">
       <p id="loading">Loading...</p>
