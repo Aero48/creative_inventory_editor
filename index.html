@@ -38,6 +38,8 @@
     #item-search {
       display: flex;
       flex-direction: column;
+      position: fixed;
+      right: 0;
       width: 500px;
       height: 200px;
       margin-left: 20px;
@@ -81,6 +83,7 @@
 
       <div class="input-container">
         <input type="text" id="item-input" />
+        <input type="text" id="nbt-input" />
         <img src="" alt="" id="thumbnail" />
       </div>
 
@@ -91,6 +94,10 @@
     </div>
     <div id="item-search">
       <div id="item-search-mod-tabs"></div>
+      <div id="item-search-arrows">
+        <button onclick="searchPageChange(-1)">Previous</button>
+        <button onclick="searchPageChange(1)">Next</button>
+      </div>
       <div id="item-search-list"></div>
     </div>
 

@@ -1,12 +1,16 @@
 var items = [];
+var potions = [];
 var tabs = [];
 var mods = [];
 var tabNames = ['building_blocks', 'decorations', 'redstone', 'transportation', 'misc', 'food', 'tools', 'combat', 'brewing', '10_spawn_eggs', '11_operator'];
 var currentTab = 0;
+var queryList = [];
+var queryPage = 1;
 var mode = "add";
 
 const container = document.getElementById("container");
 const itemInput = document.getElementById("item-input");
+const nbtInput = document.getElementById("nbt-input");
 const thumbnail = document.getElementById("thumbnail");
 const modeBtn = document.getElementById("mode-switch");
 const modTabs = document.getElementById("item-search-mod-tabs");
@@ -92,6 +96,7 @@ function displayTab(id) {
         }
       })
     } else {
+      img.title += " NBT: " + item.nbt;
       checkIfImageExists("icons/" + item.name.replaceAll(':', '__') + "__" + item.nbt.replaceAll(':', '__').replaceAll('\"', "'") + '.png', (exists) => {
         if (exists) {
           img.src = "icons/" + item.name.replaceAll(':', '__') + "__" + item.nbt.replaceAll(':', '__').replaceAll('\"', "'") + '.png'
@@ -136,6 +141,12 @@ async function dataCollect() {
     console.log("An error has loading items");
   });
 
+  await $.getJSON("json/potions.json", function (data) {
+    potions = data.potions
+  }).fail(function () {
+    console.log("An error has loading items");
+  });
+
   for (const tab of tabNames) {
     if (localStorage.hasOwnProperty(tab) == true) {
       tabs.push(JSON.parse(localStorage.getItem(tab)))
@@ -162,12 +173,76 @@ function modeSwitch() {
   }
 }
 
+function searchPageChange(amount) {
+  if (!(queryPage == 1 && amount < 0)) {
+    if ((queryList[(queryPage) * 49] != null) || amount < 0) {
+      queryPage += amount;
+      displayQuery(queryPage);
+    }
+
+  }
+
+}
+
+function displayQuery(page) {
+  pg = page;
+  let pageList = [];
+  for (let i = pg * 49 - 49; i < pg * 49; i++) {
+    pageList.push(queryList[i])
+  }
+  searchList.innerHTML = "";
+  pageList.forEach(item => {
+    let img = document.createElement("img");
+    img.classList.add("query-img");
+    img.dataset.name = item.name;
+    //img.dataset.id = index - 1;
+    img.title = item.name;
+    if (item.nbt == null) {
+      checkIfImageExists("icons/" + item.name.replace(':', '__') + ".png", (exists) => {
+        if (exists) {
+          img.src = "icons/" + item.name.replace(':', '__') + ".png"
+        } else {
+          checkIfImageExists("icons/" + item.name.replace(':', '__') + "__{Damage__0}.png", (exists) => {
+            if (exists) {
+              img.src = "icons/" + item.name.replace(':', '__') + "__{Damage__0}.png"
+            } else {
+              img.src = "icons/cube-solid.svg"
+            }
+          })
+        }
+      })
+    } else {
+      img.dataset.nbt = item.nbt;
+      img.title += " NBT: " + item.nbt;
+      checkIfImageExists("icons/" + item.name.replaceAll(':', '__') + "__" + item.nbt.replaceAll(':', '__').replaceAll('\"', "'") + '.png', (exists) => {
+        if (exists) {
+          img.src = "icons/" + item.name.replaceAll(':', '__') + "__" + item.nbt.replaceAll(':', '__').replaceAll('\"', "'") + '.png'
+        } else {
+          checkIfImageExists("icons/" + item.name.replace(':', '__') + ".png", (exists) => {
+            if (exists) {
+              img.src = "icons/" + item.name.replace(':', '__') + ".png"
+            } else {
+              img.src = "icons/cube-solid.svg"
+            }
+          })
+        }
+      })
+    }
+    searchList.appendChild(img)
+    //index++;
+  })
+}
+
 $(document).ready(function () {
   dataCollect()
   $('body').on('click', 'div.divider', function () {
     if (mode == "add") {
       console.log(this.id)
-      tabs[currentTab].tab_items.splice(this.id, 0, { name: itemInput.value })
+      if (nbtInput.value != "") {
+        tabs[currentTab].tab_items.splice(this.id, 0, { name: itemInput.value, nbt: nbtInput.value })
+      } else {
+        tabs[currentTab].tab_items.splice(this.id, 0, { name: itemInput.value })
+      }
       localStorage.setItem(tabNames[currentTab], JSON.stringify(tabs[currentTab]));
       displayTab(currentTab)
     }
@@ -194,29 +269,31 @@ $(document).ready(function () {
 
   $('body').on('click', 'button.mod-tab', function () {
     searchList.innerHTML = "";
+    queryList = [];
+    queryPage = 1;
     items.forEach(item => {
       if (this.innerHTML == item.split(":")[0]) {
-
-        const queryItem = document.createElement('img');
-        queryItem.title = item;
-        checkIfImageExists("icons/" + item.replace(':', '__') + ".png", (exists) => {
-          if (exists) {
-            queryItem.src = "icons/" + item.replace(':', '__') + ".png"
-          } else {
-            checkIfImageExists("icons/" + item.replace(':', '__') + "__{Damage__0}.png", (exists) => {
-              if (exists) {
-                queryItem.src = "icons/" + item.replace(':', '__') + "__{Damage__0}.png"
-              } else {
-                queryItem.src = "icons/cube-solid.svg"
-              }
-            })
-          }
-        })
-        //console.log(searchList)
-        searchList.appendChild(queryItem);
+        if (item == "minecraft:potion" || item == "minecraft:splash_potion" || item == "minecraft:lingering_potion" || item == "minecraft:tipped_arrow") {
+          potions.forEach(potion => {
+            queryList.push({ name: item, nbt: "{Potion:\"" + potion + "\"}" })
+          })
+        } else {
+          queryList.push({ name: item })
+        }
       }
-
     })
+    console.log(queryList)
+    displayQuery(queryPage);
+  })
+
+  $('body').on('click', 'img.query-img', function () {
+    itemInput.value = this.dataset.name;
+    nbtInput.value = this.dataset.nbt;
+    if (this.dataset.nbt != null) {
+      nbtInput.value = this.dataset.nbt;
+    } else {
+      nbtInput.value = "";
+    }
   })
 
   textBoxChange()

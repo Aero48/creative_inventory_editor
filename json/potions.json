@@ -1,0 +1,155 @@
+{
+  "potions": [
+    "minecraft:empty",
+
+    "minecraft:water",
+
+    "minecraft:mundane",
+
+    "minecraft:thick",
+
+    "minecraft:awkward",
+
+    "minecraft:night_vision",
+
+    "minecraft:long_night_vision",
+
+    "minecraft:invisibility",
+
+    "minecraft:long_invisibility",
+
+    "minecraft:leaping",
+
+    "minecraft:long_leaping",
+
+    "minecraft:strong_leaping",
+
+    "minecraft:fire_resistance",
+
+    "minecraft:long_fire_resistance",
+
+    "minecraft:swiftness",
+
+    "minecraft:long_swiftness",
+
+    "minecraft:strong_swiftness",
+
+    "minecraft:slowness",
+
+    "minecraft:long_slowness",
+
+    "minecraft:strong_slowness",
+
+    "minecraft:turtle_master",
+
+    "minecraft:long_turtle_master",
+
+    "minecraft:strong_turtle_master",
+
+    "minecraft:water_breathing",
+
+    "minecraft:long_water_breathing",
+
+    "minecraft:healing",
+
+    "minecraft:strong_healing",
+
+    "minecraft:harming",
+
+    "minecraft:strong_harming",
+
+    "minecraft:poison",
+
+    "minecraft:long_poison",
+
+    "minecraft:strong_poison",
+
+    "minecraft:regeneration",
+
+    "minecraft:long_regeneration",
+
+    "minecraft:strong_regeneration",
+
+    "minecraft:strength",
+
+    "minecraft:long_strength",
+
+    "minecraft:strong_strength",
+
+    "minecraft:weakness",
+
+    "minecraft:long_weakness",
+
+    "minecraft:luck",
+
+    "minecraft:slow_falling",
+
+    "minecraft:long_slow_falling",
+
+    "oreganized:stunning",
+
+    "oreganized:long_stunning",
+
+    "oreganized:strong_stunning",
+
+    "quark:resilience",
+
+    "quark:long_resilience",
+
+    "quark:strong_resilience",
+
+    "windswept:thorns",
+
+    "windswept:long_thorns",
+
+    "windswept:strong_thorns",
+
+    "buzzier_bees:long_luck",
+
+    "buzzier_bees:strong_luck",
+
+    "buzzier_bees:unluck",
+
+    "buzzier_bees:long_unluck",
+
+    "buzzier_bees:strong_unluck",
+
+    "upgrade_aquatic:insomnia",
+
+    "upgrade_aquatic:insomnia_strong",
+
+    "upgrade_aquatic:restfulness",
+
+    "upgrade_aquatic:restfulness_strong",
+
+    "upgrade_aquatic:repellence",
+
+    "upgrade_aquatic:repellence_strong",
+
+    "upgrade_aquatic:repellence_long",
+
+    "upgrade_aquatic:vibing",
+
+    "upgrade_aquatic:vibing_strong",
+
+    "upgrade_aquatic:vibing_long",
+
+    "environmental:vitality",
+
+    "environmental:vitality_strong",
+
+    "atmospheric:relief",
+
+    "atmospheric:relief_strong",
+
+    "atmospheric:relief_long",
+
+    "atmospheric:worsening",
+
+    "atmospheric:worsening_strong",
+
+    "atmospheric:worsening_long",
+
+    "autumnity:extension"
+  ]
+}
