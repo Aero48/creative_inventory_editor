@@ -7,6 +7,9 @@
     <title>Document</title>
   </head>
   <style>
+    body {
+      display: flex;
+    }
     #container {
       display: flex;
       width: 576px;
@@ -31,41 +34,66 @@
     #mode-switch {
       cursor: pointer;
     }
+
+    #item-search {
+      display: flex;
+      flex-direction: column;
+      width: 500px;
+      height: 200px;
+      margin-left: 20px;
+    }
+
+    #item-search-mod-tabs {
+      width: 500px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .mod-tab {
+      height: 20px;
+    }
   </style>
   <body>
-    <div class="tabs">
-      <button class="tab" data-tab="0">Building Blocks</button>
-      <button class="tab" data-tab="1">Colored Blocks</button>
-      <button class="tab" data-tab="2">Natural Blocks</button>
-      <button class="tab" data-tab="3">Functional Blocks</button>
-      <button class="tab" data-tab="4">Redstone</button>
-      <button class="tab" data-tab="5">Tools</button>
-      <button class="tab" data-tab="6">Weapons</button>
-      <button class="tab" data-tab="7">Food & Drink</button>
-      <button class="tab" data-tab="8">Materials</button>
-      <button class="tab" data-tab="9">Spawn Eggs</button>
-      <button class="tab" data-tab="10">Operator</button>
+    <div id="creative-tab-zone">
+      <div class="tabs">
+        <button class="tab" data-tab="0">Building Blocks</button>
+        <button class="tab" data-tab="1">Colored Blocks</button>
+        <button class="tab" data-tab="2">Natural Blocks</button>
+        <button class="tab" data-tab="3">Functional Blocks</button>
+        <button class="tab" data-tab="4">Redstone</button>
+        <button class="tab" data-tab="5">Tools</button>
+        <button class="tab" data-tab="6">Weapons</button>
+        <button class="tab" data-tab="7">Food & Drink</button>
+        <button class="tab" data-tab="8">Materials</button>
+        <button class="tab" data-tab="9">Spawn Eggs</button>
+        <button class="tab" data-tab="10">Operator</button>
+      </div>
+      <div>
+        <button
+          id="download"
+          onclick="downloadObjectAsJson(tabs[currentTab], tabNames[currentTab])"
+        >
+          Download
+        </button>
+        <button id="clear" onclick="clearLocal()">Clear Local</button>
+        <div id="mode-switch" onclick="modeSwitch()">Add</div>
+      </div>
+
+      <div class="input-container">
+        <input type="text" id="item-input" />
+        <img src="" alt="" id="thumbnail" />
+      </div>
+
+      <div id="container">
+        <p id="loading">Loading...</p>
+        <div class="divider" id="0"></div>
+      </div>
     </div>
-    <div>
-      <button
-        id="download"
-        onclick="downloadObjectAsJson(tabs[currentTab], tabNames[currentTab])"
-      >
-        Download
-      </button>
-      <button id="clear" onclick="clearLocal()">Clear Local</button>
-      <div id="mode-switch" onclick="modeSwitch()">Add</div>
+    <div id="item-search">
+      <div id="item-search-mod-tabs"></div>
+      <div id="item-search-list"></div>
     </div>
 
-    <div class="input-container">
-      <input type="text" id="item-input" />
-      <img src="" alt="" id="thumbnail" />
-    </div>
-
-    <div id="container">
-      <p id="loading">Loading...</p>
-      <div class="divider" id="0"></div>
-    </div>
     <script src="lib/jquery-3.6.1.min.js"></script>
     <script src="app.js"></script>
   </body>

@@ -1,5 +1,6 @@
 var items = [];
 var tabs = [];
+var mods = [];
 var tabNames = ['building_blocks', 'decorations', 'redstone', 'transportation', 'misc', 'food', 'tools', 'combat', 'brewing', '10_spawn_eggs', '11_operator'];
 var currentTab = 0;
 var mode = "add";
@@ -8,6 +9,8 @@ const container = document.getElementById("container");
 const itemInput = document.getElementById("item-input");
 const thumbnail = document.getElementById("thumbnail");
 const modeBtn = document.getElementById("mode-switch");
+const modTabs = document.getElementById("item-search-mod-tabs");
+const searchList = document.getElementById("item-search-list");
 
 function textBoxChange() {
   $(itemInput).change(function () {
@@ -112,6 +115,20 @@ function displayTab(id) {
   })
 }
 
+function getModTabs() {
+  let tempMods = []
+  items.forEach(item => {
+    tempMods.push(item.split(":")[0])
+    mods = [...new Set(tempMods)];
+  })
+  mods.forEach(mod => {
+    const modElement = document.createElement("button");
+    modElement.innerHTML = mod;
+    modElement.classList.add("mod-tab");
+    modTabs.appendChild(modElement);
+  })
+}
+
 async function dataCollect() {
   await $.getJSON("json/items.json", function (data) {
     items = data.items
@@ -132,6 +149,7 @@ async function dataCollect() {
   }
 
   displayTab(currentTab);
+  getModTabs();
 }
 
 function modeSwitch() {
@@ -172,6 +190,33 @@ $(document).ready(function () {
       displayTab(currentTab)
     }
 
+  })
+
+  $('body').on('click', 'button.mod-tab', function () {
+    searchList.innerHTML = "";
+    items.forEach(item => {
+      if (this.innerHTML == item.split(":")[0]) {
+
+        const queryItem = document.createElement('img');
+        queryItem.title = item;
+        checkIfImageExists("icons/" + item.replace(':', '__') + ".png", (exists) => {
+          if (exists) {
+            queryItem.src = "icons/" + item.replace(':', '__') + ".png"
+          } else {
+            checkIfImageExists("icons/" + item.replace(':', '__') + "__{Damage__0}.png", (exists) => {
+              if (exists) {
+                queryItem.src = "icons/" + item.replace(':', '__') + "__{Damage__0}.png"
+              } else {
+                queryItem.src = "icons/cube-solid.svg"
+              }
+            })
+          }
+        })
+        //console.log(searchList)
+        searchList.appendChild(queryItem);
+      }
+
+    })
   })
 
   textBoxChange()
