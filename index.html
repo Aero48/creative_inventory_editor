@@ -12,8 +12,10 @@
     }
     #container {
       display: flex;
-      width: 576px;
+      width: 670px;
+      height: 500px;
       flex-wrap: wrap;
+      overflow-y: scroll;
     }
     img {
       width: 64px;
@@ -34,6 +36,19 @@
     } */
     #mode-switch {
       cursor: pointer;
+    }
+
+    .tabs {
+      width: 670px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #data-options {
+      width: 670px;
+      display: flex;
+      justify-content: space-between;
     }
 
     #item-search {
@@ -58,6 +73,26 @@
   </style>
   <body>
     <div id="creative-tab-zone">
+      <div id="data-options">
+        <button
+          id="download"
+          onclick="downloadObjectAsJson(tabs[currentTab], tabNames[currentTab])"
+        >
+          Download
+        </button>
+        <button id="clear" onclick="clearLocal()" style="color: red">
+          Clear Local
+        </button>
+      </div>
+
+      <div id="mode-switch" onclick="modeSwitch()">Add</div>
+
+      <div class="input-container">
+        <input type="text" id="item-input" />
+        <input type="text" id="nbt-input" />
+        <img src="" alt="" id="thumbnail" />
+      </div>
+
       <div class="tabs">
         <button class="tab" data-tab="0">Building Blocks</button>
         <button class="tab" data-tab="1">Colored Blocks</button>
@@ -70,22 +105,6 @@
         <button class="tab" data-tab="8">Materials</button>
         <button class="tab" data-tab="9">Spawn Eggs</button>
         <button class="tab" data-tab="10">Operator</button>
-      </div>
-      <div>
-        <button
-          id="download"
-          onclick="downloadObjectAsJson(tabs[currentTab], tabNames[currentTab])"
-        >
-          Download
-        </button>
-        <button id="clear" onclick="clearLocal()">Clear Local</button>
-        <div id="mode-switch" onclick="modeSwitch()">Add</div>
-      </div>
-
-      <div class="input-container">
-        <input type="text" id="item-input" />
-        <input type="text" id="nbt-input" />
-        <img src="" alt="" id="thumbnail" />
       </div>
 
       <div id="container">
