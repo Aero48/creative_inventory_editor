@@ -57,6 +57,11 @@ function downloadObjectAsJson(exportObj, exportName) {
   downloadAnchorNode.remove();
 }
 
+function clearLocal() {
+  localStorage.clear();
+  location.reload();
+}
+
 function displayTab(id) {
   let index = 1
   container.innerHTML = "";
@@ -115,11 +120,15 @@ async function dataCollect() {
   });
 
   for (const tab of tabNames) {
-    await $.getJSON("json/" + tab + ".json", function (data) {
-      tabs.push(data)
-    }).fail(function () {
-      console.log("An error has occurred loading tab: " + tab);
-    });
+    if (localStorage.hasOwnProperty(tab) == true) {
+      tabs.push(JSON.parse(localStorage.getItem(tab)))
+    } else {
+      await $.getJSON("json/" + tab + ".json", function (data) {
+        tabs.push(data)
+      }).fail(function () {
+        console.log("An error has occurred loading tab: " + tab);
+      });
+    }
   }
 
   displayTab(currentTab);
@@ -127,23 +136,11 @@ async function dataCollect() {
 
 function modeSwitch() {
   if (mode == "add") {
-    mode = "delete"
-    modeBtn.innerHTML = "Delete"
-    // $('div.divider').css("visibility", "hidden");
-    // $(".tab-img").mouseover(function () {
-    //   $(this).css("background-color", "red");
-    // }).mouseout(function () {
-    //   $(this).css("background-color", "transparent");
-    // });
+    mode = "delete";
+    modeBtn.innerHTML = "Delete";
   } else if (mode == "delete") {
-    mode = "add"
-    modeBtn.innerHTML = "Add"
-    // $('div.divider').css("visibility", "visible");
-    // $(".tab-img").mouseover(function () {
-    //   $(this).css("background-color", "transparent");
-    // }).mouseout(function () {
-    //   $(this).css("background-color", "transparent");
-    // });
+    mode = "add";
+    modeBtn.innerHTML = "Add";
   }
 }
 
@@ -153,6 +150,7 @@ $(document).ready(function () {
     if (mode == "add") {
       console.log(this.id)
       tabs[currentTab].tab_items.splice(this.id, 0, { name: itemInput.value })
+      localStorage.setItem(tabNames[currentTab], JSON.stringify(tabs[currentTab]));
       displayTab(currentTab)
     }
   });
@@ -170,6 +168,7 @@ $(document).ready(function () {
       let firstHalf = tabs[currentTab].tab_items.slice(0, currentID)
       let secondHalf = tabs[currentTab].tab_items.slice(currentID + 1);
       tabs[currentTab].tab_items = firstHalf.concat(secondHalf);
+      localStorage.setItem(tabNames[currentTab], JSON.stringify(tabs[currentTab]));
       displayTab(currentTab)
     }
 
