@@ -80,6 +80,7 @@ function displayTab(id) {
     let img = document.createElement("img");
     img.classList.add("tab-img");
     img.dataset.id = index - 1;
+    img.dataset.name = item.name;
     img.title = item.name;
     if (item.nbt == null) {
       checkIfImageExists("icons/" + item.name.replace(':', '__') + ".png", (exists) => {
@@ -96,6 +97,7 @@ function displayTab(id) {
         }
       })
     } else {
+      img.dataset.nbt = item.nbt;
       img.title += " NBT: " + item.nbt;
       checkIfImageExists("icons/" + item.name.replaceAll(':', '__') + "__" + item.nbt.replaceAll(':', '__').replaceAll('\"', "'") + '.png', (exists) => {
         if (exists) {
@@ -168,6 +170,9 @@ function modeSwitch() {
     mode = "delete";
     modeBtn.innerHTML = "Delete";
   } else if (mode == "delete") {
+    mode = "move";
+    modeBtn.innerHTML = "Move";
+  } else {
     mode = "add";
     modeBtn.innerHTML = "Add";
   }
@@ -263,6 +268,22 @@ $(document).ready(function () {
       tabs[currentTab].tab_items = firstHalf.concat(secondHalf);
       localStorage.setItem(tabNames[currentTab], JSON.stringify(tabs[currentTab]));
       displayTab(currentTab)
+    } else if (mode == "move") {
+      let currentID = Number(this.dataset.id)
+      itemInput.value = this.dataset.name;
+      if (this.dataset.nbt != null) {
+        nbtInput.value = this.dataset.nbt;
+      } else {
+        nbtInput.value = "";
+      }
+
+      console.log(currentID)
+      let firstHalf = tabs[currentTab].tab_items.slice(0, currentID)
+      let secondHalf = tabs[currentTab].tab_items.slice(currentID + 1);
+      tabs[currentTab].tab_items = firstHalf.concat(secondHalf);
+      localStorage.setItem(tabNames[currentTab], JSON.stringify(tabs[currentTab]));
+      displayTab(currentTab)
+      modeSwitch();
     }
 
   })
