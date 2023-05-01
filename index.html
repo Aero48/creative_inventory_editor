@@ -8,7 +8,7 @@
   </head>
   <style>
     body {
-      display: flex;
+      /* display: flex; */
       padding-left: 30px;
       padding-right: 30px;
     }
@@ -23,6 +23,10 @@
       background-color: #eee;
       border-width: 5px;
       border-radius: 10px;
+    }
+
+    #main-container {
+      display: flex;
     }
     img {
       width: 64px;
@@ -75,8 +79,14 @@
       border-top: 0;
     }
 
+    .arrow-button{
+      border-style:outset;
+      border-color:darkgray;
+      border-width: 5px;
+      border-radius: 10px;
+    }
+
     #data-options {
-      width: 670px;
       display: flex;
       justify-content: space-between;
     }
@@ -91,16 +101,25 @@
       width: 515px;
       height: 200px;
       margin-left: 20px;
+      margin-right: 20px;
+    }
+
+    #item-search-list {
+      min-height: 540px;
+      margin-top: 20px;
     }
 
     #item-search-mod-tabs {
-      width: 515px;
+      width: 200px;
+      height: 600px;
       display: flex;
+      flex-direction: column;
       flex-wrap: wrap;
     }
 
     .mod-tab {
-      height: 20px;
+      height: 40px;
+      width: 200px;
     }
 
     #item-search-arrows {
@@ -109,59 +128,60 @@
     }
   </style>
   <body>
-    <div id="creative-tab-zone">
-      <div id="data-options">
-        <button
-          id="download"
-          onclick="downloadObjectAsJson(tabs[currentTab], tabNames[currentTab])"
-        >
-          Download
-        </button>
-        <button id="clear" onclick="clearLocal()" style="color: red">
-          Clear Local
-        </button>
-      </div>
-
-      <div id="mode-switch" onclick="modeSwitch()">Add</div>
-
-      <div class="input-container">
-        <input type="text" id="item-input" />
-        <input type="text" id="nbt-input" />
-        
-      </div>
-
-      <div class="tabs">
-        <button class="tab top-tab" data-tab="0" title="Building Blocks"><img src="icons/minecraft__bricks.png" alt=""></button>
-        <button class="tab top-tab" data-tab="1" title="Colored Blocks"><img src="icons/minecraft__cyan_wool.png" alt=""></button>
-        <button class="tab top-tab" data-tab="2" title="Natural Blocks"><img src="icons/minecraft__grass_block.png" alt=""></button>
-        <button class="tab top-tab" data-tab="3" title="Functional Blocks"><img src="icons/minecraft__oak_sign.png" alt=""></button>
-        <button class="tab top-tab" data-tab="4" title="Redstone"><img src="icons/minecraft__redstone.png" alt=""></button>
-        <button class="tab top-tab" data-tab="5" title="Tools"><img src="icons/minecraft__diamond_pickaxe__{Damage__0}.png" alt=""></button>
-        
-      </div>
-
-      <div id="container">
-        <p id="loading">Loading...</p>
-        <div class="divider" id="0"></div>
-      </div>
-
-      <div class="tabs">
-        <button class="tab bottom-tab" data-tab="6" title="Weapons"><img src="icons/minecraft__netherite_sword__{Damage__0}.png" alt=""></button>
-        <button class="tab bottom-tab" data-tab="7" title="Food & Drink"><img src="icons/minecraft__golden_apple.png" alt=""></button>
-        <button class="tab bottom-tab" data-tab="8" title="Materials"><img src="icons/minecraft__iron_ingot.png" alt=""></button>
-        <button class="tab bottom-tab" data-tab="9" title="Spawn Eggs"><img src="icons/minecraft__pig_spawn_egg.png" alt=""></button>
-        <button class="tab bottom-tab" data-tab="10" title="Operator"><img src="icons/minecraft__command_block.png" alt=""></button>
-      </div>
+    <div id="data-options">
+      <button
+        id="download"
+        onclick="downloadObjectAsJson(tabs[currentTab], tabNames[currentTab])"
+      >
+        Download
+      </button>
+      <button id="clear" onclick="clearLocal()" style="color: red">
+        Clear Local
+      </button>
     </div>
-    <div id="item-search">
-      <div id="item-search-mod-tabs"></div>
+    <div class="input-container">
+      <input type="text" id="item-input" />
+      <input type="text" id="nbt-input" />
       
-      <div id="item-search-list"></div>
-      <div id="item-search-arrows">
-        <button onclick="searchPageChange(-1)"><img src="icons/arrow-left-solid.svg" alt=""></button>
-        <button onclick="searchPageChange(1)"><img src="icons/arrow-right-solid.svg" alt=""></button>
-      </div>
     </div>
+    <div id="main-container">
+      <div id="creative-tab-zone">
+
+        <div id="mode-switch" onclick="modeSwitch()">Add</div>
+        <div class="tabs">
+          <button class="tab top-tab" data-tab="0" title="Building Blocks"><img src="icons/minecraft__bricks.png" alt=""></button>
+          <button class="tab top-tab" data-tab="1" title="Colored Blocks"><img src="icons/minecraft__cyan_wool.png" alt=""></button>
+          <button class="tab top-tab" data-tab="2" title="Natural Blocks"><img src="icons/minecraft__grass_block.png" alt=""></button>
+          <button class="tab top-tab" data-tab="3" title="Functional Blocks"><img src="icons/minecraft__oak_sign.png" alt=""></button>
+          <button class="tab top-tab" data-tab="4" title="Redstone"><img src="icons/minecraft__redstone.png" alt=""></button>
+          <button class="tab top-tab" data-tab="5" title="Tools"><img src="icons/minecraft__diamond_pickaxe__{Damage__0}.png" alt=""></button>
+          
+        </div>
+  
+        <div id="container">
+          <p id="loading">Loading...</p>
+          <div class="divider" id="0"></div>
+        </div>
+  
+        <div class="tabs">
+          <button class="tab bottom-tab" data-tab="6" title="Weapons"><img src="icons/minecraft__netherite_sword__{Damage__0}.png" alt=""></button>
+          <button class="tab bottom-tab" data-tab="7" title="Food & Drink"><img src="icons/minecraft__golden_apple.png" alt=""></button>
+          <button class="tab bottom-tab" data-tab="8" title="Materials"><img src="icons/minecraft__iron_ingot.png" alt=""></button>
+          <button class="tab bottom-tab" data-tab="9" title="Spawn Eggs"><img src="icons/minecraft__pig_spawn_egg.png" alt=""></button>
+          <button class="tab bottom-tab" data-tab="10" title="Operator"><img src="icons/minecraft__command_block.png" alt=""></button>
+        </div>
+      </div>
+      <div id="item-search">
+        <div id="item-search-list"></div>
+        <div id="item-search-arrows">
+          <button onclick="searchPageChange(-1)" class="arrow-button"><img src="icons/arrow-left-solid.svg" alt=""></button>
+          <p id="item-index">0/0</p>
+          <button onclick="searchPageChange(1)" class="arrow-button"><img src="icons/arrow-right-solid.svg" alt=""></button>
+        </div>
+      </div>
+      <div id="item-search-mod-tabs"></div>
+    </div>
+    
 
     <script src="lib/jquery-3.6.1.min.js"></script>
     <script src="app.js"></script>

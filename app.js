@@ -15,6 +15,7 @@ const thumbnail = document.getElementById("thumbnail");
 const modeBtn = document.getElementById("mode-switch");
 const modTabs = document.getElementById("item-search-mod-tabs");
 const searchList = document.getElementById("item-search-list");
+const queryIndex = document.getElementById("item-index");
 
 function textBoxChange() {
   $(itemInput).change(function () {
@@ -126,8 +127,11 @@ function getModTabs() {
   let tempMods = []
   items.forEach(item => {
     tempMods.push(item.split(":")[0])
-    mods = [...new Set(tempMods)];
+    
+
   })
+  mods = [...new Set(tempMods)];
+  mods.sort();
   mods.forEach(mod => {
     const modElement = document.createElement("button");
     modElement.innerHTML = mod;
@@ -180,7 +184,7 @@ function modeSwitch() {
 
 function searchPageChange(amount) {
   if (!(queryPage == 1 && amount < 0)) {
-    if ((queryList[(queryPage) * 56] != null) || amount < 0) {
+    if ((queryList[(queryPage) * 64] != null) || amount < 0) {
       queryPage += amount;
       displayQuery(queryPage);
     }
@@ -190,9 +194,11 @@ function searchPageChange(amount) {
 }
 
 function displayQuery(page) {
+  
   pg = page;
+  queryIndex.innerHTML = pg + "/" + Math.ceil(queryList.length/64);
   let pageList = [];
-  for (let i = pg * 56 - 56; i < pg * 56; i++) {
+  for (let i = pg * 64 - 64; i < pg * 64; i++) {
     pageList.push(queryList[i])
   }
   searchList.innerHTML = "";
