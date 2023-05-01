@@ -9,6 +9,8 @@
   <style>
     body {
       display: flex;
+      padding-left: 30px;
+      padding-right: 30px;
     }
     #container {
       display: flex;
@@ -16,9 +18,15 @@
       height: 500px;
       flex-wrap: wrap;
       overflow-y: scroll;
+      border-style:outset;
+      border-color:darkgray;
+      background-color: #eee;
+      border-width: 5px;
+      border-radius: 10px;
     }
     img {
       width: 64px;
+      height: 64px;
       image-rendering: pixelated;
     }
     #thumbnail {
@@ -45,30 +53,59 @@
       justify-content: center;
     }
 
+    .tab-img {
+      margin-bottom: 8px;
+    }
+
+    .top-tab{
+      border-style:outset;
+      border-color:darkgray;
+      border-width: 5px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      border-bottom: 0;
+    }
+
+    .bottom-tab{
+      border-style:outset;
+      border-color:darkgray;
+      border-width: 5px;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      border-top: 0;
+    }
+
     #data-options {
       width: 670px;
       display: flex;
       justify-content: space-between;
     }
 
+    .input-container {
+      margin-bottom: 20px;
+    }
+
     #item-search {
       display: flex;
       flex-direction: column;
-      position: fixed;
-      right: 0;
-      width: 500px;
+      width: 515px;
       height: 200px;
       margin-left: 20px;
     }
 
     #item-search-mod-tabs {
-      width: 500px;
+      width: 515px;
       display: flex;
       flex-wrap: wrap;
     }
 
     .mod-tab {
       height: 20px;
+    }
+
+    #item-search-arrows {
+      display: flex;
+      justify-content: space-between;
     }
   </style>
   <body>
@@ -90,35 +127,40 @@
       <div class="input-container">
         <input type="text" id="item-input" />
         <input type="text" id="nbt-input" />
-        <img src="" alt="" id="thumbnail" />
+        
       </div>
 
       <div class="tabs">
-        <button class="tab" data-tab="0">Building Blocks</button>
-        <button class="tab" data-tab="1">Colored Blocks</button>
-        <button class="tab" data-tab="2">Natural Blocks</button>
-        <button class="tab" data-tab="3">Functional Blocks</button>
-        <button class="tab" data-tab="4">Redstone</button>
-        <button class="tab" data-tab="5">Tools</button>
-        <button class="tab" data-tab="6">Weapons</button>
-        <button class="tab" data-tab="7">Food & Drink</button>
-        <button class="tab" data-tab="8">Materials</button>
-        <button class="tab" data-tab="9">Spawn Eggs</button>
-        <button class="tab" data-tab="10">Operator</button>
+        <button class="tab top-tab" data-tab="0" title="Building Blocks"><img src="icons/minecraft__bricks.png" alt=""></button>
+        <button class="tab top-tab" data-tab="1" title="Colored Blocks"><img src="icons/minecraft__cyan_wool.png" alt=""></button>
+        <button class="tab top-tab" data-tab="2" title="Natural Blocks"><img src="icons/minecraft__grass_block.png" alt=""></button>
+        <button class="tab top-tab" data-tab="3" title="Functional Blocks"><img src="icons/minecraft__oak_sign.png" alt=""></button>
+        <button class="tab top-tab" data-tab="4" title="Redstone"><img src="icons/minecraft__redstone.png" alt=""></button>
+        <button class="tab top-tab" data-tab="5" title="Tools"><img src="icons/minecraft__diamond_pickaxe__{Damage__0}.png" alt=""></button>
+        
       </div>
 
       <div id="container">
         <p id="loading">Loading...</p>
         <div class="divider" id="0"></div>
       </div>
+
+      <div class="tabs">
+        <button class="tab bottom-tab" data-tab="6" title="Weapons"><img src="icons/minecraft__netherite_sword__{Damage__0}.png" alt=""></button>
+        <button class="tab bottom-tab" data-tab="7" title="Food & Drink"><img src="icons/minecraft__golden_apple.png" alt=""></button>
+        <button class="tab bottom-tab" data-tab="8" title="Materials"><img src="icons/minecraft__iron_ingot.png" alt=""></button>
+        <button class="tab bottom-tab" data-tab="9" title="Spawn Eggs"><img src="icons/minecraft__pig_spawn_egg.png" alt=""></button>
+        <button class="tab bottom-tab" data-tab="10" title="Operator"><img src="icons/minecraft__command_block.png" alt=""></button>
+      </div>
     </div>
     <div id="item-search">
       <div id="item-search-mod-tabs"></div>
-      <div id="item-search-arrows">
-        <button onclick="searchPageChange(-1)">Previous</button>
-        <button onclick="searchPageChange(1)">Next</button>
-      </div>
+      
       <div id="item-search-list"></div>
+      <div id="item-search-arrows">
+        <button onclick="searchPageChange(-1)"><img src="icons/arrow-left-solid.svg" alt=""></button>
+        <button onclick="searchPageChange(1)"><img src="icons/arrow-right-solid.svg" alt=""></button>
+      </div>
     </div>
 
     <script src="lib/jquery-3.6.1.min.js"></script>

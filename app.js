@@ -180,7 +180,7 @@ function modeSwitch() {
 
 function searchPageChange(amount) {
   if (!(queryPage == 1 && amount < 0)) {
-    if ((queryList[(queryPage) * 49] != null) || amount < 0) {
+    if ((queryList[(queryPage) * 56] != null) || amount < 0) {
       queryPage += amount;
       displayQuery(queryPage);
     }
@@ -192,7 +192,7 @@ function searchPageChange(amount) {
 function displayQuery(page) {
   pg = page;
   let pageList = [];
-  for (let i = pg * 49 - 49; i < pg * 49; i++) {
+  for (let i = pg * 56 - 56; i < pg * 56; i++) {
     pageList.push(queryList[i])
   }
   searchList.innerHTML = "";
