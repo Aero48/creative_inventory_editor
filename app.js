@@ -2,7 +2,7 @@ var items = [];
 var potions = [];
 var tabs = [];
 var mods = [];
-var tabNames = ['building_blocks', 'decorations', 'redstone', 'transportation', 'misc', 'food', 'tools', 'combat', 'brewing', '10_spawn_eggs', '11_operator'];
+var tabNames = ['building_blocks', 'decorations', 'redstone', 'transportation', 'misc', 'food', 'tools', 'combat', 'brewing', '10_spawn_eggs', '11_operator', 'thermal_blocks'];
 var currentTab = 0;
 var queryList = [];
 var queryPage = 1;
@@ -157,7 +157,7 @@ async function dataCollect() {
     if (localStorage.hasOwnProperty(tab) == true) {
       tabs.push(JSON.parse(localStorage.getItem(tab)))
     } else {
-      await $.getJSON("json/" + tab + ".json", function (data) {
+      await $.getJSON("json/tabs/" + tab + ".json", function (data) {
         tabs.push(data)
       }).fail(function () {
         console.log("An error has occurred loading tab: " + tab);

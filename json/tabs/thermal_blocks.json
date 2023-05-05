@@ -1,0 +1,12 @@
+{
+    "tab_enabled": true,
+    "tab_name": "thermal_blocks",
+    "replace": true,
+    "tab_stack": { "name": "thermal:enderium_block" },
+    "tab_items": [
+      {
+        "name": "minecraft:soul_torch",
+        "nbt": "{customName: \"Oi Govener!\"}"
+      }
+    ]
+  }
