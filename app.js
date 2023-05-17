@@ -18,6 +18,7 @@ const modTabs = document.getElementById("item-search-mod-tabs");
 const searchList = document.getElementById("item-search-list");
 const queryIndex = document.getElementById("item-index");
 
+// old code that waited for text inputs to change (originally for thumnail icon) I don't even think this does anything at the moment
 function textBoxChange() {
   $(itemInput).change(function () {
 
@@ -39,6 +40,7 @@ function textBoxChange() {
   })
 }
 
+// checks if image file exists
 function checkIfImageExists(url, callback) {
   const img = new Image();
   img.src = url;
@@ -56,6 +58,7 @@ function checkIfImageExists(url, callback) {
   }
 }
 
+// downloads selected object as a json file
 function downloadObjectAsJson(exportObj, exportName) {
   var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
   var downloadAnchorNode = document.createElement('a');
@@ -66,11 +69,13 @@ function downloadObjectAsJson(exportObj, exportName) {
   downloadAnchorNode.remove();
 }
 
+// clears local storage and reloads the page
 function clearLocal() {
   localStorage.clear();
   location.reload();
 }
 
+// displays all items in the current creative tab NEEDS TO BE IMPROVED
 function displayTab(id) {
   let index = 1
   container.innerHTML = "";
@@ -191,17 +196,17 @@ function modeSwitch() {
   }
 }
 
+// changes search query page based on which arrow button is clicked
 function searchPageChange(amount) {
   if (!(queryPage == 1 && amount < 0)) {
     if ((queryList[(queryPage) * 64] != null) || amount < 0) {
       queryPage += amount;
       displayQuery(queryPage);
     }
-
   }
-
 }
 
+// populates current query page with items NEEDS TO BE IMPROVED
 function displayQuery(page) {
   
   pg = page;
@@ -275,6 +280,7 @@ function deleteItem(elementData){
   displayTab(currentTab)
 }
 
+// prepares a list of items based on the selected mod button
 function prepareModSearchQuery(modId){
   searchList.innerHTML = "";
   queryList = [];
@@ -292,6 +298,7 @@ function prepareModSearchQuery(modId){
   })
 }
 
+// fills the current item inputs with the selected item
 function setCurrentItem(elementData){
   itemInput.value = elementData.name;
     nbtInput.value = elementData.nbt;
@@ -303,7 +310,6 @@ function setCurrentItem(elementData){
 }
 
 function initListeners(){
-
   // displays the clicked tab
   $('body').on('click', 'button.tab', function () {
     currentTab = Number(this.dataset.tab)
