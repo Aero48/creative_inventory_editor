@@ -75,6 +75,31 @@ function clearLocal() {
   location.reload();
 }
 
+// visual effects depending on each mode
+function modeSpecificListeners(){
+  $(".divider").css("opacity", "0");
+  $(".divider").hover(function(){
+    if (mode == "add"){
+      $(this).css("opacity", "1");
+    }
+  },
+  function(){
+    $(this).css("opacity", "0")
+  });
+
+  $(".tab-img").css("background-color", "transparent");
+  $(".tab-img").hover(function(){
+    if (mode == "delete"){
+      $(this).css("background-color", "red");
+    } else if (mode == "move"){
+      $(this).css("background-color", "yellow");
+    }
+  },
+  function(){
+    $(this).css("background-color", "transparent")
+  });
+}
+
 // displays all items in the current creative tab NEEDS TO BE IMPROVED
 function displayTab(id) {
   let index = 1
@@ -127,6 +152,7 @@ function displayTab(id) {
     container.appendChild(divider)
     index++;
   })
+  modeSpecificListeners();
 }
 
 // creates a list of all the most based on the mod ids from the items list
@@ -350,4 +376,5 @@ $(document).ready(function () {
   dataCollect();
   initListeners();
   textBoxChange();
+  
 })

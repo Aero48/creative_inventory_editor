@@ -30,13 +30,12 @@ body {
   .divider {
     width: 8px;
     height: 64px;
-  }
-  .divider:hover {
     background-color: green;
   }
-  /* .tab-img:hover {
-    filter: opacity(100%);
+  /* .divider:hover {
+    background-color: green;
   } */
+  
   #mode-switch {
     cursor: pointer;
   }
