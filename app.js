@@ -1,13 +1,14 @@
-var items = [];
-var potions = [];
-var tabs = [];
-var mods = [];
-var tabNames = ['building_blocks', 'decorations', 'redstone', 'transportation', 'misc', 'food', 'tools', 'combat', 'brewing', '10_spawn_eggs', '11_operator', 'thermal_blocks'];
-var currentTab = 0;
-var queryList = [];
-var queryPage = 1;
-var mode = "add";
+var items = []; // array of items for use in mod tabs section (right side)
+var potions = []; // array of all potion effects
+var tabs = []; // list of all tabs and their data
+var mods = []; // list of all mods
+var tabNames = ['building_blocks', 'decorations', 'redstone', 'transportation', 'misc', 'food', 'tools', 'combat', 'brewing', '10_spawn_eggs', '11_operator', 'thermal_blocks']; // mod tab names for use in data collection function
+var currentTab = 0; // id of current tab
+var queryList = []; // array of currently display items in item search (right side of the screen)
+var queryPage = 1; // current page of item search
+var mode = "add"; // current mode
 
+// DOM stuff
 const container = document.getElementById("container");
 const itemInput = document.getElementById("item-input");
 const nbtInput = document.getElementById("nbt-input");
@@ -123,6 +124,7 @@ function displayTab(id) {
   })
 }
 
+// creates a list of all the most based on the mod ids from the items list
 function getModTabs() {
   let tempMods = []
   items.forEach(item => {
@@ -130,8 +132,11 @@ function getModTabs() {
     
 
   })
-  mods = [...new Set(tempMods)];
+  // since this is using the list of all items, the mods array must have all duplicates removed.
+  // then they are sorted alphabetically
+  mods = [...new Set(tempMods)]; // removes duplicates
   mods.sort();
+  // creates buttons for each mod
   mods.forEach(mod => {
     const modElement = document.createElement("button");
     modElement.innerHTML = mod;
@@ -141,18 +146,21 @@ function getModTabs() {
 }
 
 async function dataCollect() {
+  // sets the items array to a complete list of all the items in the json file
   await $.getJSON("json/items.json", function (data) {
     items = data.items
   }).fail(function () {
     console.log("An error has loading items");
   });
 
+  // sets the potions array to a complete list of all the potions in the json file
   await $.getJSON("json/potions.json", function (data) {
     potions = data.potions
   }).fail(function () {
     console.log("An error has loading items");
   });
 
+  // checks local storage for creative tabs. If there are none, load the default tabs (left side of the screen)
   for (const tab of tabNames) {
     if (localStorage.hasOwnProperty(tab) == true) {
       tabs.push(JSON.parse(localStorage.getItem(tab)))
@@ -169,6 +177,7 @@ async function dataCollect() {
   getModTabs();
 }
 
+// triple toggle system for mode NEEDS TO BE REPLACED WITH SOMETHING BETTER
 function modeSwitch() {
   if (mode == "add") {
     mode = "delete";
@@ -244,84 +253,95 @@ function displayQuery(page) {
   })
 }
 
-$(document).ready(function () {
-  dataCollect()
-  $('body').on('click', 'div.divider', function () {
-    if (mode == "add") {
-      console.log(this.id)
-      if (nbtInput.value != "") {
-        tabs[currentTab].tab_items.splice(this.id, 0, { name: itemInput.value, nbt: nbtInput.value })
-      } else {
-        tabs[currentTab].tab_items.splice(this.id, 0, { name: itemInput.value })
-      }
-      localStorage.setItem(tabNames[currentTab], JSON.stringify(tabs[currentTab]));
-      displayTab(currentTab)
-    }
-  });
+// adds an item to the current tab at the given id
+function addItem(id){
+  if (nbtInput.value != "") {
+    tabs[currentTab].tab_items.splice(id, 0, { name: itemInput.value, nbt: nbtInput.value })
+  } else {
+    tabs[currentTab].tab_items.splice(id, 0, { name: itemInput.value })
+  }
+  localStorage.setItem(tabNames[currentTab], JSON.stringify(tabs[currentTab]));
+  displayTab(currentTab)
+}
 
+// removes a given item from the current tab
+function deleteItem(elementData){
+  let currentID = Number(elementData.id)
+  console.log(currentID)
+  let firstHalf = tabs[currentTab].tab_items.slice(0, currentID)
+  let secondHalf = tabs[currentTab].tab_items.slice(currentID + 1);
+  tabs[currentTab].tab_items = firstHalf.concat(secondHalf);
+  localStorage.setItem(tabNames[currentTab], JSON.stringify(tabs[currentTab]));
+  displayTab(currentTab)
+}
+
+function prepareModSearchQuery(modId){
+  searchList.innerHTML = "";
+  queryList = [];
+  queryPage = 1;
+  items.forEach(item => {
+    if (modId == item.split(":")[0]) {
+      if (item == "minecraft:potion" || item == "minecraft:splash_potion" || item == "minecraft:lingering_potion" || item == "minecraft:tipped_arrow") {
+        potions.forEach(potion => {
+          queryList.push({ name: item, nbt: "{Potion:\"" + potion + "\"}" })
+        })
+      } else {
+        queryList.push({ name: item })
+      }
+    }
+  })
+}
+
+function setCurrentItem(elementData){
+  itemInput.value = elementData.name;
+    nbtInput.value = elementData.nbt;
+    if (elementData.nbt != null) {
+      nbtInput.value = elementData.nbt;
+    } else {
+      nbtInput.value = "";
+    }
+}
+
+function initListeners(){
+
+  // displays the clicked tab
   $('body').on('click', 'button.tab', function () {
     currentTab = Number(this.dataset.tab)
     displayTab(currentTab)
   })
 
+  // if user is in "add" mode, add the selected item to the current tab
+  $('body').on('click', 'div.divider', function () {
+    if (mode == "add") {
+      addItem(this.id);
+    }
+  });
+
+  // if user is in "delete" mode, remove the selected item from the current tab. If user is in "move" mode, move the item.
   $('body').on('click', 'img.tab-img', function () {
     if (mode == "delete") {
-
-      let currentID = Number(this.dataset.id)
-      console.log(currentID)
-      let firstHalf = tabs[currentTab].tab_items.slice(0, currentID)
-      let secondHalf = tabs[currentTab].tab_items.slice(currentID + 1);
-      tabs[currentTab].tab_items = firstHalf.concat(secondHalf);
-      localStorage.setItem(tabNames[currentTab], JSON.stringify(tabs[currentTab]));
-      displayTab(currentTab)
+      deleteItem(this.dataset);
     } else if (mode == "move") {
-      let currentID = Number(this.dataset.id)
-      itemInput.value = this.dataset.name;
-      if (this.dataset.nbt != null) {
-        nbtInput.value = this.dataset.nbt;
-      } else {
-        nbtInput.value = "";
-      }
-
-      console.log(currentID)
-      let firstHalf = tabs[currentTab].tab_items.slice(0, currentID)
-      let secondHalf = tabs[currentTab].tab_items.slice(currentID + 1);
-      tabs[currentTab].tab_items = firstHalf.concat(secondHalf);
-      localStorage.setItem(tabNames[currentTab], JSON.stringify(tabs[currentTab]));
-      displayTab(currentTab)
+      setCurrentItem(this.dataset);
+      deleteItem(this.dataset);
       modeSwitch();
     }
-
   })
 
+  // displays list of items in clicked mod tab
   $('body').on('click', 'button.mod-tab', function () {
-    searchList.innerHTML = "";
-    queryList = [];
-    queryPage = 1;
-    items.forEach(item => {
-      if (this.innerHTML == item.split(":")[0]) {
-        if (item == "minecraft:potion" || item == "minecraft:splash_potion" || item == "minecraft:lingering_potion" || item == "minecraft:tipped_arrow") {
-          potions.forEach(potion => {
-            queryList.push({ name: item, nbt: "{Potion:\"" + potion + "\"}" })
-          })
-        } else {
-          queryList.push({ name: item })
-        }
-      }
-    })
-    console.log(queryList)
+    prepareModSearchQuery(this.innerHTML);
     displayQuery(queryPage);
   })
 
+  // sets current item to be the one clicked on
   $('body').on('click', 'img.query-img', function () {
-    itemInput.value = this.dataset.name;
-    nbtInput.value = this.dataset.nbt;
-    if (this.dataset.nbt != null) {
-      nbtInput.value = this.dataset.nbt;
-    } else {
-      nbtInput.value = "";
-    }
+    setCurrentItem(this.dataset);
   })
+}
 
-  textBoxChange()
+$(document).ready(function () {
+  dataCollect();
+  initListeners();
+  textBoxChange();
 })
